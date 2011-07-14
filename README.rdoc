@@ -1,19 +1,45 @@
-= strc
+= STRC - Super Terrible Redis Clone
 
-Description goes here.
+STRC is a poor attempt to make a native Ruby clone of Redis.  Why would you want that?  Well, who knows.  Maybe you don't feel like installing Redis for some reason.  Maybe you need to be able to run tests on a machine without having to install Redis.  Maybe you like badly implemented clones.
 
-== Contributing to strc
- 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
-* Fork the project
-* Start a feature/bugfix branch
-* Commit and push until you are happy with your contribution
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+One thing STRC does kind of have going for it is that it's much more lazy in regards to what you give it.  Since you're passing it Ruby objects, that means you could just plop any old object in as a key or a value.  If that's something you're into.
 
-== Copyright
+== Usage
 
-Copyright (c) 2011 'Chris. See LICENSE.txt for
-further details.
+STRC is distributed as a gem.  To install:
 
+	% gem install strc
+
+Now you've got it all up in your computer.  To use:
+
+	require 'rubygems'
+	require 'strc'
+
+	strc = STRC.new
+
+Now you could start passing it commands, if they've been implemented.
+
+=== Getting and Setting!
+	>> strc.set "foo", "bar"
+	=> "OK"
+	>> strc.get "foo"
+	=> "bar"
+
+=== Sets!
+	>> strc.sadd "stuff", "abc"
+	=> 1
+	>> strc.sadd "stuff", "123", "blah"
+	=> 2
+	>> strc.scard "stuff"
+	=> 3
+	>> strc.sismember "stuff", "abc"
+	=> true
+	>> strc.sismember "stuff", "xyz"
+	=> false
+	>> strc.srem "stuff", "blah"
+	=> true
+	>> strc.smembers "stuff"
+	=> ["abc", "123"]
+
+== History
+* 0.0.1 - Initial release.  Does some basic things.
