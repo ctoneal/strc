@@ -16,9 +16,9 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/ctoneal/strc"
   gem.license = "MIT"
   gem.summary = %Q{Super Terrible Redis Clone}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.description = %Q{STRC is a terrible Ruby clone of Redis}
   gem.email = "ctoneal@gmail.com"
-  gem.authors = ["'Chris"]
+  gem.authors = ["Chris O'Neal"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
   # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
   #  gem.add_runtime_dependency 'jabber4r', '> 0.1'

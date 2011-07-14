@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "lib/strc.rb",
+    "strc.gemspec",
     "test/helper.rb",
     "test/test_strc.rb"
   ]
