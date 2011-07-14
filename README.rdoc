@@ -41,5 +41,29 @@ Now you could start passing it commands, if they've been implemented.
     >> strc.smembers "stuff"
     => ["abc", "123"]
 
+== Command List
+Currently, the following commands are implemented:
+* get
+* set
+* del
+* exists
+* rename
+* renamenx
+* sadd
+* srem
+* sismember
+* smembers
+* scard
+* sinter
+* sinterstore
+* sdiff
+* sdiffstore
+* sunion
+* sunionstore
+* smove
+* srandmember
+* spop
+
 == History
+* 0.0.2 - Set commands done.  Most general commands done.
 * 0.0.1 - Initial release.  Does some basic things.
