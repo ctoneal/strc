@@ -8,38 +8,38 @@ One thing STRC does kind of have going for it is that it's much more lazy in reg
 
 STRC is distributed as a gem.  To install:
 
-	% gem install strc
+    % gem install strc
 
 Now you've got it all up in your computer.  To use:
 
-	require 'rubygems'
-	require 'strc'
+    require 'rubygems'
+    require 'strc'
 
-	strc = STRC.new
+    strc = STRC.new
 
 Now you could start passing it commands, if they've been implemented.
 
 === Getting and Setting!
-	>> strc.set "foo", "bar"
-	=> "OK"
-	>> strc.get "foo"
-	=> "bar"
+    >> strc.set "foo", "bar"
+    => "OK"
+    >> strc.get "foo"
+    => "bar"
 
 === Sets!
-	>> strc.sadd "stuff", "abc"
-	=> 1
-	>> strc.sadd "stuff", "123", "blah"
-	=> 2
-	>> strc.scard "stuff"
-	=> 3
-	>> strc.sismember "stuff", "abc"
-	=> true
-	>> strc.sismember "stuff", "xyz"
-	=> false
-	>> strc.srem "stuff", "blah"
-	=> true
-	>> strc.smembers "stuff"
-	=> ["abc", "123"]
+    >> strc.sadd "stuff", "abc"
+    => 1
+    >> strc.sadd "stuff", "123", "blah"
+    => 2
+    >> strc.scard "stuff"
+    => 3
+    >> strc.sismember "stuff", "abc"
+    => true
+    >> strc.sismember "stuff", "xyz"
+    => false
+    >> strc.srem "stuff", "blah"
+    => true
+    >> strc.smembers "stuff"
+    => ["abc", "123"]
 
 == History
 * 0.0.1 - Initial release.  Does some basic things.
