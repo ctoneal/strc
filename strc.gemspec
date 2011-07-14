@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{strc}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Chris O'Neal"]
@@ -27,6 +27,8 @@ Gem::Specification.new do |s|
     "lib/strc.rb",
     "strc.gemspec",
     "test/helper.rb",
+    "test/test_basic_functions.rb",
+    "test/test_sets.rb",
     "test/test_strc.rb"
   ]
   s.homepage = %q{http://github.com/ctoneal/strc}
@@ -36,6 +38,8 @@ Gem::Specification.new do |s|
   s.summary = %q{Super Terrible Redis Clone}
   s.test_files = [
     "test/helper.rb",
+    "test/test_basic_functions.rb",
+    "test/test_sets.rb",
     "test/test_strc.rb"
   ]
 
