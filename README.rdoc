@@ -46,6 +46,16 @@ Now you could start passing it commands, if they've been implemented.
     >> strc.smembers "stuff"
     => ["abc", "123"]
 
+=== Lists!
+    >> strc.rpush "poo", "abc", "xyz"
+    => 2
+    >> strc.lpush "poo", "123"
+    => 3
+    >> strc.rpop "poo"
+    => "xyz"
+    >> strc.llen "poo"
+    => 2
+
 == Command List
 Currently, the following commands are implemented:
 * get
@@ -60,20 +70,34 @@ Currently, the following commands are implemented:
 * incrby
 * rename
 * renamenx
-* sadd
-* srem
-* sismember
-* smembers
-* scard
-* sinter
-* sinterstore
-* sdiff
-* sdiffstore
-* sunion
-* sunionstore
-* smove
-* srandmember
-* spop
+* Sets
+    * sadd
+    * srem
+    * sismember
+    * smembers
+    * scard
+    * sinter
+    * sinterstore
+    * sdiff
+    * sdiffstore
+    * sunion
+    * sunionstore
+    * smove
+    * srandmember
+    * spop
+* Lists
+    * lrange
+    * llen
+    * lpush
+    * lpushx
+    * lpop
+    * rpush
+    * rpushx
+    * rpop
+    * lindex
+    * lset
+    * ltrim
+    * rpoplpush
 
 == History
 * 0.0.2 - Set commands done.  Most general commands done.

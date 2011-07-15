@@ -28,6 +28,13 @@ class TestLists < Test::Unit::TestCase
 		end
 	end
 
+	context "llen" do
+		should "return length of the list" do
+			result = @test.llen("poop")
+			assert_equal(3, result)
+		end
+	end
+
 	context "rpush" do
 		should "create a new list" do
 			@test.rpush("asdf", "abc")
@@ -99,6 +106,46 @@ class TestLists < Test::Unit::TestCase
 		should "remove the first element in the list" do
 			@test.lpop("poop")
 			assert_equal(["b", "c"], @test.lrange("poop", 0, -1))
+		end
+	end
+
+	context "lindex" do
+		should "return value at index" do
+			result = @test.lindex("poop", 1)
+			assert_equal("b", result)
+		end
+
+		should "work with negative numbers" do
+			result = @test.lindex("poop", -2)
+			assert_equal("b", result)
+		end
+
+		should "return nil for out of range" do
+			result = @test.lindex("poop", 10)
+			assert_nil(result)
+		end
+	end
+
+	context "lset" do
+		should "set value at index" do
+			@test.lset("poop", 2, "test")
+			assert_equal("test", @test.lindex("poop", 2))
+		end
+	end
+
+	context "ltrim" do
+		should "trim the list to the range" do
+			@test.ltrim("poop", 1, -1)
+			assert_equal(["b", "c"], @test.lrange("poop", 0, -1))
+		end
+	end
+
+	context "rpoplpush" do
+		should "take an element from the end of one list and put it on the front of another" do
+			@test.lpush("asdf", "123")
+			@test.rpoplpush("poop", "asdf")
+			assert_equal(["a", "b"], @test.lrange("poop", 0, -1))
+			assert_equal(["c", "123"], @test.lrange("asdf", 0, -1))
 		end
 	end
 end

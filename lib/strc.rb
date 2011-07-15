@@ -286,6 +286,11 @@ class STRC
 		return list.nil? ? [] : list
 	end
 
+	# Returns length of list
+	def llen(key)
+		lget(key).length
+	end
+
 	# Append values to a list
 	def rpush(key, *values)
 		list = lget(key)
@@ -330,6 +335,29 @@ class STRC
 		element = list.shift
 		set(key, list)
 		return element
+	end
+
+	# Get an element from a list by its index
+	def lindex(key, index)
+		lget(key)[index]
+	end
+
+	# Set value for an element at index in a list
+	def lset(key, index, value)
+		list = lget(key)
+		list[index] = value
+		set(key, list)
+	end
+
+	# Trim a list to the specified range
+	def ltrim(key, start, stop)
+		set(key, lrange(key, start, stop))
+	end
+
+	# Removes an element from the end of one list and puts it at
+	# the beginning of another
+	def rpoplpush(source, destination)
+		lpush(destination, rpop(source))
 	end
 
 	# End of list commands~
