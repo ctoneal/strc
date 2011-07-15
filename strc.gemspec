@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{strc}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Chris O'Neal"]
@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
     "strc.gemspec",
     "test/helper.rb",
     "test/test_basic_functions.rb",
+    "test/test_hashes.rb",
     "test/test_keys.rb",
     "test/test_lists.rb",
     "test/test_sets.rb",
@@ -41,6 +42,7 @@ Gem::Specification.new do |s|
   s.test_files = [
     "test/helper.rb",
     "test/test_basic_functions.rb",
+    "test/test_hashes.rb",
     "test/test_keys.rb",
     "test/test_lists.rb",
     "test/test_sets.rb",

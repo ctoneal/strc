@@ -112,6 +112,7 @@ Currently, the following commands are implemented:
   * hlen
 
 == History
+* 0.0.4 - Some hash commands done.
 * 0.0.3 - Some list commands done.
 * 0.0.2 - Set commands done.  Most general commands done.
 * 0.0.1 - Initial release.  Does some basic things.
