@@ -57,6 +57,14 @@ Now you could start passing it commands, if they've been implemented.
     => 2
 
 === Hashes!
+    >> strc.hset "test" "key1" "val1"
+    => true
+    >> strc.hget "test" "key1"
+    => "val1"
+    >> strc.hlen "test"
+    => 1
+    >> strc.hkeys "test"
+    => ["key1"]
 
 == Command List
 Currently, the following commands are implemented:
