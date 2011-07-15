@@ -71,33 +71,33 @@ Currently, the following commands are implemented:
 * rename
 * renamenx
 * Sets
-    * sadd
-    * srem
-    * sismember
-    * smembers
-    * scard
-    * sinter
-    * sinterstore
-    * sdiff
-    * sdiffstore
-    * sunion
-    * sunionstore
-    * smove
-    * srandmember
-    * spop
+  * sadd
+  * srem
+  * sismember
+  * smembers
+  * scard
+  * sinter
+  * sinterstore
+  * sdiff
+  * sdiffstore
+  * sunion
+  * sunionstore
+  * smove
+  * srandmember
+  * spop
 * Lists
-    * lrange
-    * llen
-    * lpush
-    * lpushx
-    * lpop
-    * rpush
-    * rpushx
-    * rpop
-    * lindex
-    * lset
-    * ltrim
-    * rpoplpush
+  * lrange
+  * llen
+  * lpush
+  * lpushx
+  * lpop
+  * rpush
+  * rpushx
+  * rpop
+  * lindex
+  * lset
+  * ltrim
+  * rpoplpush
 
 == History
 * 0.0.2 - Set commands done.  Most general commands done.
