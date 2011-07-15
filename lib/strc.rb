@@ -1,3 +1,5 @@
+require 'set'
+
 class STRC
 	Exception = Class.new(StandardError)
 
@@ -127,7 +129,7 @@ class STRC
 		if args.length < 1
 			raise STRC::Exception.new "Wrong number of arguments (1 for 2)"
 		end
-		set = smembers(key)
+		set = sget(key)
 		added = 0
 		args.each do |arg|
 			unless set.include?(arg)
@@ -142,7 +144,7 @@ class STRC
 	# Remove a member from a set
 	def srem(key, member)
 		if sismember(key, member)
-			@dict[key].delete_at(@dict[key].index(member))
+			@dict[key].delete(member)
 			return true
 		else
 			return false
@@ -153,13 +155,13 @@ class STRC
 	def sinter(*keys)
 		sets = []
 		keys.each do |key|
-			sets << smembers(key)
+			sets << sget(key)
 		end
 		inter = sets.shift
 		sets.each do |set|
 			inter &= set
 		end
-		return inter
+		return inter.to_a
 	end
 
 	# Similar to SINTER, but stores in destination instead of returning
@@ -173,13 +175,13 @@ class STRC
 	def sdiff(*keys)
 		sets = []
 		keys.each do |key|
-			sets << smembers(key)
+			sets << sget(key)
 		end
 		diff = sets.shift
 		sets.each do |set|
 			diff -= set
 		end
-		return diff
+		return diff.to_a
 	end
 
 	# Similar to SDIFF, but stores in destination instead of returning
@@ -204,14 +206,13 @@ class STRC
 	def sunion(*keys)
 		sets = []
 		keys.each do |key|
-			sets << smembers(key)
+			sets << sget(key)
 		end
-		union = sets.shift.uniq
+		union = sets.shift
 		sets.each do |set|
 			union += set
-			union.uniq!
 		end
-		return union
+		return union.to_a
 	end
 
 	# Similar to SUNION, but stores in destination instead of returning
@@ -222,7 +223,7 @@ class STRC
 
 	# Returns a random element from the set
 	def srandmember(key)
-		smembers(key).sample
+		sget(key).to_a.sample
 	end
 
 	# Randomly remove and return an item from the set
@@ -234,29 +235,108 @@ class STRC
 
 	# Determine if the given value is a member of the set at key
 	def sismember(key, member)
-		set = smembers(key)
+		set = sget(key)
 		return set.include?(member)
 	end
 
 	# Returns an array of members of the set
 	def smembers(key)
+		sget(key).to_a
+	end
+
+	# Gets the length of a set
+	def scard(key)
+		set = sget(key)
+		return set.length
+	end
+
+	# Gets a set.  Private
+	def sget(key)
 		if exists(key)
 			value = get(key)
-			if value.class == Array
+			if value.class == Set
 				return value
 			else
 				raise STRC::Exception.new "ERR Operation against a key holding the wrong kind of value"
 			end
 		else
-			return []
+			return Set.new
 		end
 	end
 
-	# Gets the length of a set
-	def scard(key)
-		set = smembers(key)
-		return set.length
+	# End of set commands~
+
+	# List commands!
+
+	# Gets a list.  Private
+	def lget(key)
+		list = []
+		if exists(key)
+			list = get(key)
+			unless list.class == Array
+				raise STRC::Exception.new "ERR Operation against a key holding the wrong kind of value"	
+			end
+		end
+		return list
 	end
 
-	# End of set commands~
+	# Returns elements from key in the given range
+	def lrange(key, start, stop)
+		list = lget(key)[start..stop]
+		return list.nil? ? [] : list
+	end
+
+	# Append values to a list
+	def rpush(key, *values)
+		list = lget(key)
+		list += values
+		set(key, list)
+		return list.length
+	end
+
+	# RPUSH if the list exists
+	def rpushx(key, *values)
+		if exists(key)
+			rpush(key, *values)
+		end
+	end
+
+	# Remove and get the last element in a list
+	def rpop(key)
+		list = lget(key)
+		element = list.pop
+		set(key, list)
+		return element
+	end
+
+	# Prepend values to a list
+	def lpush(key, *values)
+		list = lget(key)
+		list = values + list
+		set(key, list)
+		return list.length
+	end
+
+	# LPUSH if the list exists
+	def lpushx(key, *values)
+		if exists(key)
+			lpush(key, *values)
+		end
+	end
+
+	# Remove and get the first element in a list
+	def lpop(key)
+		list = lget(key)
+		element = list.shift
+		set(key, list)
+		return element
+	end
+
+	# End of list commands~
+
+	# Hash commands!
+
+	# End of hash commands~
+
+	private :sget, :lget
 end
