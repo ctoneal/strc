@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{strc}
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Chris O'Neal"]
-  s.date = %q{2011-07-14}
+  s.date = %q{2011-07-15}
   s.description = %q{STRC is a terrible Ruby clone of Redis}
   s.email = %q{ctoneal@gmail.com}
   s.extra_rdoc_files = [
@@ -28,6 +28,8 @@ Gem::Specification.new do |s|
     "strc.gemspec",
     "test/helper.rb",
     "test/test_basic_functions.rb",
+    "test/test_keys.rb",
+    "test/test_lists.rb",
     "test/test_sets.rb",
     "test/test_strc.rb"
   ]
@@ -39,6 +41,8 @@ Gem::Specification.new do |s|
   s.test_files = [
     "test/helper.rb",
     "test/test_basic_functions.rb",
+    "test/test_keys.rb",
+    "test/test_lists.rb",
     "test/test_sets.rb",
     "test/test_strc.rb"
   ]
