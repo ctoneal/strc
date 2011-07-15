@@ -129,7 +129,7 @@ class STRC
 		if args.length < 1
 			raise STRC::Exception.new "Wrong number of arguments (1 for 2)"
 		end
-		set = sget(key)
+		set = get_s(key)
 		added = 0
 		args.each do |arg|
 			unless set.include?(arg)
@@ -155,7 +155,7 @@ class STRC
 	def sinter(*keys)
 		sets = []
 		keys.each do |key|
-			sets << sget(key)
+			sets << get_s(key)
 		end
 		inter = sets.shift
 		sets.each do |set|
@@ -175,7 +175,7 @@ class STRC
 	def sdiff(*keys)
 		sets = []
 		keys.each do |key|
-			sets << sget(key)
+			sets << get_s(key)
 		end
 		diff = sets.shift
 		sets.each do |set|
@@ -206,7 +206,7 @@ class STRC
 	def sunion(*keys)
 		sets = []
 		keys.each do |key|
-			sets << sget(key)
+			sets << get_s(key)
 		end
 		union = sets.shift
 		sets.each do |set|
@@ -223,7 +223,7 @@ class STRC
 
 	# Returns a random element from the set
 	def srandmember(key)
-		sget(key).to_a.sample
+		get_s(key).to_a.sample
 	end
 
 	# Randomly remove and return an item from the set
@@ -235,33 +235,31 @@ class STRC
 
 	# Determine if the given value is a member of the set at key
 	def sismember(key, member)
-		set = sget(key)
+		set = get_s(key)
 		return set.include?(member)
 	end
 
 	# Returns an array of members of the set
 	def smembers(key)
-		sget(key).to_a
+		get_s(key).to_a
 	end
 
 	# Gets the length of a set
 	def scard(key)
-		set = sget(key)
+		set = get_s(key)
 		return set.length
 	end
 
 	# Gets a set.  Private
-	def sget(key)
+	def get_s(key)
+		set = Set.new
 		if exists(key)
-			value = get(key)
-			if value.class == Set
-				return value
-			else
+			set = get(key)
+			unless set.class == Set
 				raise STRC::Exception.new "ERR Operation against a key holding the wrong kind of value"
 			end
-		else
-			return Set.new
 		end
+		return set
 	end
 
 	# End of set commands~
@@ -269,7 +267,7 @@ class STRC
 	# List commands!
 
 	# Gets a list.  Private
-	def lget(key)
+	def get_l(key)
 		list = []
 		if exists(key)
 			list = get(key)
@@ -282,18 +280,18 @@ class STRC
 
 	# Returns elements from key in the given range
 	def lrange(key, start, stop)
-		list = lget(key)[start..stop]
+		list = get_l(key)[start..stop]
 		return list.nil? ? [] : list
 	end
 
 	# Returns length of list
 	def llen(key)
-		lget(key).length
+		get_l(key).length
 	end
 
 	# Append values to a list
 	def rpush(key, *values)
-		list = lget(key)
+		list = get_l(key)
 		list += values
 		set(key, list)
 		return list.length
@@ -308,7 +306,7 @@ class STRC
 
 	# Remove and get the last element in a list
 	def rpop(key)
-		list = lget(key)
+		list = get_l(key)
 		element = list.pop
 		set(key, list)
 		return element
@@ -316,7 +314,7 @@ class STRC
 
 	# Prepend values to a list
 	def lpush(key, *values)
-		list = lget(key)
+		list = get_l(key)
 		list = values + list
 		set(key, list)
 		return list.length
@@ -331,7 +329,7 @@ class STRC
 
 	# Remove and get the first element in a list
 	def lpop(key)
-		list = lget(key)
+		list = get_l(key)
 		element = list.shift
 		set(key, list)
 		return element
@@ -339,12 +337,12 @@ class STRC
 
 	# Get an element from a list by its index
 	def lindex(key, index)
-		lget(key)[index]
+		get_l(key)[index]
 	end
 
 	# Set value for an element at index in a list
 	def lset(key, index, value)
-		list = lget(key)
+		list = get_l(key)
 		list[index] = value
 		set(key, list)
 	end
@@ -364,7 +362,78 @@ class STRC
 
 	# Hash commands!
 
+	# Gets the hash at key.  Private.
+	def get_h(key)
+		hash = {}
+		if exists(key)
+			hash = get(key)
+			unless hash.class == Hash
+				raise STRC::Exception.new "ERR Operation against a key holding the wrong kind of value"	
+			end
+		end
+		return hash
+	end
+
+	# Set file in hash stored at key to value.
+	def hset(key, field, value)
+		hash = get_h(key)
+		hash[field] = value
+		set(key, hash)
+	end
+
+	# Sets field in key only if it doesn't exist
+	def hsetnx(key, field, value)
+		unless hexists(key, field)
+			hset(key, field, value)
+			return true
+		end
+		return false
+	end
+
+	# Get value at field in hash at key
+	def hget(key, field)
+		get_h(key)[field]
+	end
+
+	# Deletes fields from hash
+	def hdel(key, *fields)
+		hash = get_h(key)
+		deleted = 0
+		fields.each do |field|
+			unless hash.delete(field).nil?
+				deleted += 1
+			end
+		end
+		set(key, hash)
+		return deleted
+	end
+
+	# Returns whether or not the field exists in key
+	def hexists(key, field)
+		get_h(key).has_key?(field)
+	end
+
+	# Returns an array of all fields and values in hash
+	def hgetall(key)
+		get_h(key).flatten
+	end
+
+	# Returns array of all keys in hash at key
+	def hkeys(key)
+		get_h(key).keys
+	end
+
+	# Returns array of all values in hash at key
+	def hvals(key)
+		get_h(key).values
+	end
+
+	# Returns number of fields in the hash
+	def hlen(key)
+		get_h(key).length
+	end
+
 	# End of hash commands~
 
-	private :sget, :lget
+	private :get_s, :get_l, :get_h
 end

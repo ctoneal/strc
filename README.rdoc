@@ -56,6 +56,8 @@ Now you could start passing it commands, if they've been implemented.
     >> strc.llen "poo"
     => 2
 
+=== Hashes!
+
 == Command List
 Currently, the following commands are implemented:
 * get
@@ -98,6 +100,16 @@ Currently, the following commands are implemented:
   * lset
   * ltrim
   * rpoplpush
+* Hashes
+  * hset
+  * hsetnx
+  * hget
+  * hgetall
+  * hdel
+  * hexists
+  * hkeys
+  * hvals
+  * hlen
 
 == History
 * 0.0.3 - Some list commands done.
