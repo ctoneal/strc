@@ -129,6 +129,27 @@ class TestSets < Test::Unit::TestCase
 		end
 	end
 
+	context "sunion" do
+		should "give all unique members of given sets" do
+			@test.sadd("set1", "a", "b", "c", "d")
+			@test.sadd("set2", "c")
+			@test.sadd("set3", "a", "c", "e")
+			result = @test.sunion("set1", "set2", "set3")
+			assert_equal(["a", "b", "c", "d", "e"], result)
+		end
+	end
+
+	context "sunionstore" do
+		should "work like sunion, but store in destination" do
+			@test.sadd("set1", "a", "b", "c", "d")
+			@test.sadd("set2", "c")
+			@test.sadd("set3", "a", "c", "e")
+			@test.sunionstore("new", "set1", "set2", "set3")
+			result = @test.smembers("new")
+			assert_equal(["a", "b", "c", "d", "e"], result)
+		end
+	end
+
 	context "smove" do
 		should "move an item from one set to another" do
 			@test.sadd("set1", "one" ,"two")

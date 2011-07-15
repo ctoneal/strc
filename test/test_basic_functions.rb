@@ -28,6 +28,21 @@ class TestBasicFunctions < Test::Unit::TestCase
 		end
 	end
 
+	context "setnx" do
+		should "be able to set the value of a new key" do
+			result = @test.setnx("test", 10)
+			assert(result)
+		end
+
+		should "not set value if the key already exists" do
+			@test.setnx("test", 10)
+			result = @test.setnx("test", 50)
+			assert(!result)
+			value = @test.get("test")
+			assert_equal(10, value)
+		end
+	end
+
 	context "get" do
 		should "be able to get the value of a key" do
 			@test.set("test_key", 15)
@@ -41,79 +56,83 @@ class TestBasicFunctions < Test::Unit::TestCase
 		end
 	end
 
-	context "exists" do
-		should "return true if the key exists" do
-			@test.set("test", 1)
-			assert(@test.exists("test"))
+	context "append" do
+		should "append to a string" do
+			@test.set("test", "Hello")
+			@test.append("test", " World")
+			value = @test.get("test")
+			assert_equal("Hello World", value)
 		end
 
-		should "return false if the key doesn't exist" do
-			assert(!@test.exists("test"))
-		end
-	end
-
-	context "del" do
-		should "delete a key" do
-			@test.set("test", 1)
-			deleted = @test.del("test")
-			assert_equal(1, deleted)
-			assert(!@test.exists("test"))
+		should "return the new length of the string" do
+			@test.set("test", "Hello")
+			result = @test.append("test", " World")
+			assert_equal("Hello World".length, result)
 		end
 
-		should "delete multiple keys" do
-			@test.set("test", 1)
-			@test.set("poop", 2)
-			@test.set("blah", 4)
-			deleted = @test.del("test", "poop")
-			assert_equal(2, deleted)
-			assert(!@test.exists("test"))
-			assert(!@test.exists("poop"))
-			assert(@test.exists("blah"))
+		should "set if key doesn't exist" do
+			@test.append("test", "poop")
+			result = @test.get("test")
+			assert_equal("poop", result)
+		end
+
+		should "not work for non string values" do
+			@test.set("test", 15)
+			assert_raise(STRC::Exception) { @test.append("test", "poop")}
 		end
 	end
 
-	context "randomkey" do
-		should "return a random key from the database" do
-			keys = ["test", "poop", "blah"]
-			keys.each do |key|
-				@test.set(key, 1)
-			end
-			random = @test.randomkey
-			assert_not_nil(keys.index(random))
+	context "incr" do
+		should "increment integers" do
+			@test.set("poop", 10)
+			@test.incr("poop")
+			assert_equal(11, @test.get("poop"))
+		end
+
+		should "not increment other types" do
+			@test.set("poop", "aaa")
+			assert_raise(STRC::Exception) { @test.incr("poop")}
+		end
+
+		should "return new value" do
+			@test.set("poop", 10)
+			result = @test.incr("poop")
+			assert_equal(11, result)
 		end
 	end
 
-	context "rename" do
-		should "rename a key" do
-			@test.set("poop", 1)
-			@test.rename("poop", "abc")
-			value = @test.get("abc")
-			assert_equal(1, value)
-		end
-
-		should "overwrite existing keys" do
-			@test.set("poop", 1)
-			@test.set("abc", 2)
-			@test.rename("poop", "abc")
-			value = @test.get("abc")
-			assert_equal(1, value)
+	context "incrby" do
+		should "be able to increment by value" do
+			@test.set("poop", 10)
+			@test.incrby("poop", 10)
+			assert_equal(20, @test.get("poop"))
 		end
 	end
 
-	context "renamenx" do
-		should "rename a key" do
-			@test.set("poop", 1)
-			@test.renamenx("poop", "abc")
-			value = @test.get("abc")
-			assert_equal(1, value)
+	context "decr" do
+		should "decrement integers" do
+			@test.set("poop", 10)
+			@test.decr("poop")
+			assert_equal(9, @test.get("poop"))
 		end
 
-		should "not overwrite existing keys" do
-			@test.set("poop", 1)
-			@test.set("abc", 2)
-			@test.renamenx("poop", "abc")
-			value = @test.get("abc")
-			assert_equal(2, value)
+		should "not decrement other types" do
+			@test.set("poop", "aaa")
+			assert_raise(STRC::Exception) { @test.decr("poop")}
+		end
+	
+		should "return new value" do
+			@test.set("poop", 10)
+			result = @test.decr("poop")
+			assert_equal(9, result)
+		end
+	end
+
+	context "decrby" do
+		should "be able to decrement by value" do
+			@test.set("poop", 10)
+			@test.decrby("poop", 10)
+			assert_equal(0, @test.get("poop"))
 		end
 	end
 end

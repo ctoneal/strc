@@ -1,8 +1,13 @@
 = STRC - Super Terrible Redis Clone
 
-STRC is a poor attempt to make a native Ruby clone of Redis.  Why would you want that?  Well, who knows.  Maybe you don't feel like installing Redis for some reason.  Maybe you need to be able to run tests on a machine without having to install Redis.  Maybe you like badly implemented clones.
+STRC is a poor attempt to make a useless Ruby simulation of Redis.  Why would you want that?  Well, who knows.  Maybe you:
+* don't feel like installing Redis for some reason.  
+* need to be able to run tests on a machine without having to install Redis.  
+* like badly implemented clones.
 
-One thing STRC does kind of have going for it is that it's much more lazy in regards to what you give it.  Since you're passing it Ruby objects, that means you could just plop any old object in as a key or a value.  If that's something you're into.
+I'll come out and say it, there's little reason for this to exist, and it's not really written in a fashion that is what you'd call good.  It's just for shits and giggles.  If that's your thing, read on.
+
+One thing STRC does kind of have going for it is that it's much more lazy in regards to what you give it.  Since you're passing it Ruby objects, that means you could just plop any old object in as a key or a value, instead of just a string.  If that's something you're into.
 
 == Usage
 
@@ -45,8 +50,14 @@ Now you could start passing it commands, if they've been implemented.
 Currently, the following commands are implemented:
 * get
 * set
+* setnx
 * del
 * exists
+* append
+* decr
+* decrby
+* incr
+* incrby
 * rename
 * renamenx
 * sadd

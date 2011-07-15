@@ -11,10 +11,74 @@ class STRC
 		return "OK"
 	end
 
+	# Set the value of a key only if it doesn't already exist.
+	def setnx(key, value)
+		unless exists(key)
+			set(key, value)
+			return true
+		end
+		return false
+	end
+
 	# Get the value for the given key
 	def get(key)
 		@dict[key]
 	end
+
+	# Append a value to a key
+	def append(key, value)
+		if exists(key)
+			item = get(key)
+			if item.class == String and value.class == String
+				set(key, item + value)
+			else
+				raise STRC::Exception.new "ERR Operation against a key holding the wrong kind of value"
+			end
+		else
+			set(key, value)
+		end
+		return get(key).length
+	end
+
+	# Decrement an integer
+	def decr(key)
+		decrby(key, 1)
+	end
+
+	# Decrement an integer by a certain amount
+	def decrby(key, decrement)
+		unless exists(key)
+			set(key, 0)
+		end
+		value = get(key)
+		if value.class == Fixnum
+			set(key, value - decrement)
+		else
+			raise STRC::Exception.new "ERR Operation against a key holding the wrong kind of value"
+		end
+		get(key)
+	end
+
+	# Increment an integer
+	def incr(key)
+		incrby(key, 1)
+	end
+
+	# Increment an integer by a certain amount
+	def incrby(key, increment)
+		unless exists(key)
+			set(key, 0)
+		end
+		value = get(key)
+		if value.class == Fixnum
+			set(key, value + increment)
+		else
+			raise STRC::Exception.new "ERR Operation against a key holding the wrong kind of value"
+		end
+		get(key)
+	end
+
+	# Key commands!
 
 	# Delete a key
 	def del(*keys)
@@ -54,7 +118,9 @@ class STRC
 		end
 	end
 
-	# Set functions!
+	# End of key commands~
+
+	# Set commands!
 
 	# Add a member to a set
 	def sadd(key, *args)
@@ -62,8 +128,15 @@ class STRC
 			raise STRC::Exception.new "Wrong number of arguments (1 for 2)"
 		end
 		set = smembers(key)
-		@dict[key] = set + args
-		return args.length
+		added = 0
+		args.each do |arg|
+			unless set.include?(arg)
+				set << arg
+				added += 1
+			end
+		end
+		@dict[key] = set
+		return added
 	end
 
 	# Remove a member from a set
@@ -117,7 +190,7 @@ class STRC
 
 	# Move an item from one set to another
 	def smove(source, destination, member)
-		if !sismember(source, member)
+		unless sismember(source, member)
 			return false
 		end
 		srem(source, member)
@@ -129,6 +202,16 @@ class STRC
 
 	# Returs a list of all unique items in the given sets
 	def sunion(*keys)
+		sets = []
+		keys.each do |key|
+			sets << smembers(key)
+		end
+		union = sets.shift.uniq
+		sets.each do |set|
+			union += set
+			union.uniq!
+		end
+		return union
 	end
 
 	# Similar to SUNION, but stores in destination instead of returning
@@ -152,7 +235,7 @@ class STRC
 	# Determine if the given value is a member of the set at key
 	def sismember(key, member)
 		set = smembers(key)
-		return !set.index(member).nil?
+		return set.include?(member)
 	end
 
 	# Returns an array of members of the set
@@ -162,7 +245,7 @@ class STRC
 			if value.class == Array
 				return value
 			else
-				raise STRC::Exception .new "ERR Operation against a key holding the wrong kind of value"
+				raise STRC::Exception.new "ERR Operation against a key holding the wrong kind of value"
 			end
 		else
 			return []
@@ -174,4 +257,6 @@ class STRC
 		set = smembers(key)
 		return set.length
 	end
+
+	# End of set commands~
 end
